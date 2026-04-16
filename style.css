@@ -462,9 +462,13 @@ body.is-tabbing :where(a, button, [role="button"], input, select, textarea):focu
 .bar__fill{
   display:block;
   height:100%;
-  width:var(--w);
+  width:0%;
   background:linear-gradient(90deg, var(--accent), var(--accent2));
   border-radius:999px;
+  transition: width .95s cubic-bezier(.2,.8,.2,1);
+}
+.bar.is-anim .bar__fill{
+  width:var(--w);
 }
 .hint{margin:0;color:var(--muted2);font-size:13px}
 .ol{margin:0;padding-left:18px;color:var(--muted2);font-size:14px}

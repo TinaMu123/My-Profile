@@ -107,6 +107,32 @@ function setupReveal() {
   els.forEach((el) => obs.observe(el));
 }
 
+function setupProgressBars() {
+  const bars = $$(".bar");
+  if (!bars.length) return;
+
+  const reduce =
+    window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce) {
+    bars.forEach((b) => b.classList.add("is-anim"));
+    return;
+  }
+
+  const obs = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        e.target.classList.add("is-anim");
+        obs.unobserve(e.target);
+      });
+    },
+    { threshold: 0.35 }
+  );
+
+  bars.forEach((b) => obs.observe(b));
+}
+
 function setupHeroTyping() {
   const prefixEl = document.querySelector("[data-type-prefix]");
   const nameEl = document.querySelector("[data-type-name]");
@@ -186,6 +212,7 @@ setupMobileNav();
 setupToTop();
 setupActiveNav();
 setupReveal();
+setupProgressBars();
 setupHeroTyping();
 setupToasts();
 setupKeyboardNavFocus();
