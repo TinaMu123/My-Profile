@@ -60,6 +60,8 @@ function setupActiveNav() {
   const links = $$("[data-nav-link]");
   if (!links.length) return;
 
+  if (!("IntersectionObserver" in window)) return;
+
   const map = new Map();
   links.forEach((a) => {
     const id = (a.getAttribute("href") || "").replace("#", "");
@@ -93,6 +95,11 @@ function setupReveal() {
   const els = $$(".reveal");
   if (!els.length) return;
 
+  if (!("IntersectionObserver" in window)) {
+    els.forEach((el) => el.classList.add("is-in"));
+    return;
+  }
+
   const obs = new IntersectionObserver(
     (entries) => {
       entries.forEach((e) => {
@@ -115,6 +122,14 @@ function setupProgressBars() {
     window.matchMedia &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (reduce) {
+    bars.forEach((b) => b.classList.add("is-anim"));
+    return;
+  }
+
+  if (!("IntersectionObserver" in window)) {
+    // Fallback: animate immediately.
+    // Read layout once so width transition kicks in reliably.
+    bars.forEach((b) => void b.offsetWidth);
     bars.forEach((b) => b.classList.add("is-anim"));
     return;
   }
